@@ -10,16 +10,14 @@ type Props = {
   onChange: ((value: string) => void),
 }
 
-const transformOption = (option: string) => ({ label: _.capitalize(option), value: option });
-
-export default function Selector (props: Props)  {
+export default function Selector ({ name, options, onChange }: Props)  {
   return (
     <Box flexDirection="column" alignItems="center">
-      <Text>Select {props.name.toLowerCase()}:</Text>
+      <Text>Select {name.toLowerCase()}:</Text>
       <Newline />
       <Select
-        options={props.options.map((op) => transformOption(op))}
-        onChange={props.onChange}
+        options={options.map((option) => ({ label: _.capitalize(option), value: option }))}
+        onChange={onChange}
       />
     </Box>
   );

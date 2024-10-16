@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 import { EventEmitter } from 'node:events';
+import { clearInterval } from 'node:timers';
 
 export enum Difficulty {
   Easy = 'easy',
@@ -22,10 +23,10 @@ export enum Direction {
 }
 
 export enum Event {
-  StateUpdate = 'state_update',
+  NewFrame = 'new_frame',
 }
 
-type GameSettings = {
+export type Settings = {
   difficulty: Difficulty,
   map: MapType,
   direction: Direction,
@@ -34,13 +35,9 @@ type GameSettings = {
   snakeInitialSize: number,
 }
 
-type Cell = {
-  value: string,
-  color: string,
-};
-
-type Board = Array<Array<Cell | null>>;
-type State = { board: Board, ended: boolean };
+export type Cell = { value: string, color: string, bgColor: string };
+export type Frame = Array<Array<Cell | null>>;
+export type State = { frame: Frame, ended: boolean };
 
 const intervalMap: Record<Difficulty, number> = {
   [Difficulty.Easy]: 500,
@@ -48,55 +45,47 @@ const intervalMap: Record<Difficulty, number> = {
   [Difficulty.Hard]: 100,
 };
 
+const defaultSettings: Settings = {
+  difficulty: Difficulty.Easy,
+  map: MapType.Field,
+  width: 120,
+  height: 30,
+  snakeInitialSize: 10,
+  direction: Direction.Left,
+}
+
 export default class GameEngine extends EventEmitter {
+  private settings: Settings = defaultSettings;
   private state: State | null = null;
   private interval: NodeJS.Timeout | null = null;
-  public settings: GameSettings = {
-    difficulty: Difficulty.Easy,
-    map: MapType.Field,
-    width: 120,
-    height: 30,
-    snakeInitialSize: 10,
-    direction: Direction.Left,
+
+  public start (settings: Partial<Settings> = {}) {
+    if (this.state) throw new Error('Not allowed');
+
+    Object.assign(this.settings, settings);
+
+    const frame: Frame = _.times(this.settings.height, () => (
+      _.times(this.settings.width, () => null)
+    ));
+
+    this.state = { frame, ended: false };
+
+    // maybe deep clone frame
+    this.emit(Event.NewFrame, frame);
+
+    // this.interval = setInterval(() => {}, intervalMap[this.settings.difficulty])
   }
 
-  constructor (options?: Partial<GameSettings>) {
-    super();
+  public reset () {
+    for (const event of Object.values(Event)) this.removeAllListeners(event);
+    if (this.interval) clearInterval(this.interval);
 
-    Object.assign(this.settings, options ?? {});
-  };
-
-  private setState (newState: State) {
-    this.state = newState;
-
-    // Maybe deep clone in future
-    this.emit(Event.StateUpdate, newState);
-  }
-
-  private setNextState () {
-
+    this.interval = null;
+    this.state = null;
+    this.settings = defaultSettings;
   }
 
   public move (direction: Direction) {
     this.settings.direction = direction;
-  }
-
-  public start () {
-    if (this.state) {
-      throw new Error('Not allowed');
-    }
-
-    if (this.interval) {
-      throw new Error('Unexpected');
-    }
-
-    const emptyRow = _.times(this.settings.width, () => null);
-    const board = _.times(this.settings.height, () => Array.from(emptyRow));
-
-    this.setState({ board, ended: false });
-
-    this.interval = setInterval(() => {
-
-    }, intervalMap[this.settings.difficulty])
   }
 }
