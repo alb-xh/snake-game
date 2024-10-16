@@ -3,7 +3,7 @@ import Gradient from 'ink-gradient';
 import BigText from 'ink-big-text';
 import { Box } from 'ink';
 
-import GameEngine, { Difficulty, Event, Frame as FrameType, State } from '../game-engine.js';
+import GameEngine, { Difficulty, Event, Frame as FrameType } from '../game-engine.js';
 import Selector from './Selector.js';
 import Frame from './Frame.js';
 

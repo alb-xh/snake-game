@@ -1,6 +1,5 @@
 import React from "react";
 import _ from 'lodash';
-
 import { Box, Text, Newline } from "ink";
 import { Select } from '@inkjs/ui';
 

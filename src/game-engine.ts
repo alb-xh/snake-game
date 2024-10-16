@@ -1,5 +1,4 @@
 import _ from 'lodash';
-
 import { EventEmitter } from 'node:events';
 import { clearInterval } from 'node:timers';
 
