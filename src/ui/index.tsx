@@ -10,28 +10,27 @@ import Frame from './Frame.js';
 type Props = { engine: GameEngine };
 
 export default function UI ({ engine }: Props) {
-  const [ difficulty, setDifficulty ] = React.useState<string | null>(null);
   const [ frame, setFrame ] = React.useState<FrameType | null>(null);
 
   React.useEffect(() => {
-    if (difficulty) {
-      engine.on(Event.NewFrame, setFrame);
-      engine.start({ difficulty } as any);
-    }
-
-    return () => {
-      setFrame(null);
-      engine.reset();
-    }
-  }, [ difficulty ]);
+    engine.on(Event.NewFrame, setFrame);
+    return () => engine.reset();
+  }, []);
 
   return (
     <Box alignItems='center' flexDirection='column'>
       <Gradient name='rainbow'>
         <BigText text="Snake game"/>
       </Gradient>
-      { !difficulty && <Selector name="difficulty" options={Object.values(Difficulty)} onChange={setDifficulty} /> }
-      { frame && <Frame frame={frame} /> }
+      {
+        !frame
+          ? <Selector
+              name="difficulty"
+              options={Object.values(Difficulty)}
+              onChange={(difficulty) => engine.start({ difficulty } as any)}
+            />
+          : <Frame frame={frame} />
+      }
     </Box>
   );
 }
