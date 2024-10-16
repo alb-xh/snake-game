@@ -11,6 +11,9 @@
   },
   "author": "alb-xh",
   "license": "ISC",
+  "repository": {
+    "url": "https://github.com/alb-xh/snake-game.git"
+  },
   "dependencies": {
     "commander": "^12.1.0"
   },
