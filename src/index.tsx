@@ -3,8 +3,9 @@
 import React from 'react';
 import { render } from 'ink';
 
-import GameEngine from './game-engine.js';
+import { Engine } from './game/index.js';
 import UI from './ui/index.js';
 
-const engine = new GameEngine();
+const engine = new Engine();
+
 render(<UI engine={engine} />);

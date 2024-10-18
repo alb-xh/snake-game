@@ -2,11 +2,9 @@ import React from "react";
 import _ from 'lodash';
 import { Box, Text } from "ink";
 
-import type { Frame as FrameType } from "../game-engine.js";
+import type { FrameData } from "../game/index.js";
 
-type Props = { frame: FrameType };
-
-export default function Frame ({ frame }: Props)  {
+export default function View ({ frame }: { frame: FrameData })  {
   return (
     <Box flexDirection="column" borderStyle='double'>
       {
@@ -16,10 +14,10 @@ export default function Frame ({ frame }: Props)  {
               row.map((cell, j) => (
                 <Text
                   key={j}
-                  color={cell?.color ?? ''}
-                  backgroundColor={cell?.bgColor ?? ''}
+                  color={cell.color}
+                  backgroundColor={cell.bgColor}
                 >
-                  {cell?.value ?? ' '}
+                  {cell.value}
                 </Text>
               ))
             }

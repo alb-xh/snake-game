@@ -3,17 +3,15 @@ import Gradient from 'ink-gradient';
 import BigText from 'ink-big-text';
 import { Box } from 'ink';
 
-import GameEngine, { Difficulty, Event, Frame as FrameType } from '../game-engine.js';
+import { Difficulty, Event, FrameData, Engine } from '../game/index.js';
 import Selector from './Selector.js';
-import Frame from './Frame.js';
+import View from './View.js';
 
-type Props = { engine: GameEngine };
-
-export default function UI ({ engine }: Props) {
-  const [ frame, setFrame ] = React.useState<FrameType | null>(null);
+export default function UI ({ engine }: { engine: Engine }) {
+  const [ frame, setFrame ] = React.useState<FrameData | null>(null);
 
   React.useEffect(() => {
-    engine.on(Event.NewFrame, setFrame);
+    engine.on(Event.UpdateFrameData, setFrame);
     return () => engine.reset();
   }, []);
 
@@ -29,7 +27,7 @@ export default function UI ({ engine }: Props) {
               options={Object.values(Difficulty)}
               onChange={(difficulty) => engine.start({ difficulty } as any)}
             />
-          : <Frame frame={frame} />
+          : <View frame={frame} />
       }
     </Box>
   );
