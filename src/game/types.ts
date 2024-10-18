@@ -41,5 +41,7 @@ export type State = { frame: FrameData, ended: boolean };
 export type Theme = {
   empty: FrameValue,
   fruit: FrameValue,
-  snake: { head: FrameValue, body: FrameValue, tail: FrameValue },
+  snake: Record<Direction, { head: FrameValue, body: FrameValue, tail: FrameValue }>,
 }
+
+export type Key =  { name: string, ctrl: boolean, shift: boolean };

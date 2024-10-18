@@ -1,9 +1,9 @@
 import { Difficulty, MapType, Direction, Settings } from "./types.js";
 
 export const intervalMap: Record<Difficulty, number> = {
-  [Difficulty.Easy]: 500,
-  [Difficulty.Normal]: 300,
-  [Difficulty.Hard]: 100,
+  [Difficulty.Easy]: 100,
+  [Difficulty.Normal]: 50,
+  [Difficulty.Hard]: 10,
 };
 
 export const defaultSettings: Settings = {

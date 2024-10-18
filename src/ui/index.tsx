@@ -12,6 +12,7 @@ export default function UI ({ engine }: { engine: Engine }) {
 
   React.useEffect(() => {
     engine.on(Event.UpdateFrameData, setFrame);
+    engine.start();
     return () => engine.reset();
   }, []);
 
@@ -22,11 +23,7 @@ export default function UI ({ engine }: { engine: Engine }) {
       </Gradient>
       {
         !frame
-          ? <Selector
-              name="difficulty"
-              options={Object.values(Difficulty)}
-              onChange={(difficulty) => engine.start({ difficulty } as any)}
-            />
+          ? null
           : <View frame={frame} />
       }
     </Box>
