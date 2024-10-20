@@ -1,11 +1,14 @@
 {
   "name": "@alb-xh/snake-game",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "CLI tool for playing snake game",
   "bin": "dist/index.js",
   "main": "dist/index.js",
   "type": "module",
   "private": false,
+  "engines" : {
+    "node" : ">=20.0.0"
+  },
   "scripts": {
     "build": "rm -rf ./dist && tsc",
     "start": "node --no-warnings ./dist/index.js",

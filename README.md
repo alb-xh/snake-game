@@ -8,4 +8,4 @@
 
 ## Usage
 
-1. `npx @alb-xh/snake-game`
+1. `npx @alb-xh/snake-game` (node >= 20)
