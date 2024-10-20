@@ -96,10 +96,11 @@ export default class Engine extends EventEmitter {
 
       this.emit(Event.UpdateFrameData, this.frame.draw(this.theme));
 
-      let timeout = Math.max(1, 30 - Math.floor(this.score / 10));
-      if ([ Direction.Up, Direction.Down].includes(this.snake.direction)) timeout *= (1 + this.field.height * 2 / this.field.width); //hacky
+      // hacky
+      const timeout = Math.max(1, 20 - Math.floor(this.score / 10)) *
+        ([ Direction.Up, Direction.Down ].includes(this.snake.direction) ? 2 : 1)
 
-      await sleep(timeout);
+      await sleep(timeout)
     }
   }
 }

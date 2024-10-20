@@ -3,7 +3,6 @@ import _ from 'lodash';
 import { Direction, Field } from "../types.js";
 import { fieldToSnakeSizeMap } from '../constants.js';
 import Fruit from "./fruit.js";
-import { debug } from '../../utils.js';
 
 export default  class Snake {
   public readonly position: [ number, number ][] = [];
@@ -23,9 +22,6 @@ export default  class Snake {
     const startCol = mCol - (Math.ceil(size / 2) - 1);
     const endCol = mCol + Math.floor(size / 2);
 
-    debug(mRow, mCol, startCol, endCol);
-
-
     this.position.push([ mRow, startCol ]);
 
     for (let col = startCol + 1; col < endCol; col++) {
@@ -33,7 +29,6 @@ export default  class Snake {
     }
 
     this.position.push([ mRow, endCol ]);
-    debug(this.position.length);
 
     if (!this.moveFruit())throw new Error('Failed to initialize fruit');
   };
