@@ -56,6 +56,8 @@ export default class Engine extends EventEmitter {
   }
 
   private onDirection (direction: Direction) {
+    if (this.status !== Status.Running) return;
+
     if (directionTransitionsMap[this.snake.direction].includes(direction)) {
       this.snake.setDirection(direction);
     }
@@ -68,7 +70,7 @@ export default class Engine extends EventEmitter {
     }
 
     if (this.status === Status.Paused) {
-      this.status = Status.Running;
+      this.run();
 
       return;
     }
