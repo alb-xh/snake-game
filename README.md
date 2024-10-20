@@ -9,3 +9,7 @@
 ## Usage
 
 1. `npx @alb-xh/snake` (node >= 20)
+
+## Preview
+
+![demo](https://github.com/alb-xh/snake-game/blob/master/assets/preview.png?raw=true)
