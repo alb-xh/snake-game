@@ -1,4 +1,4 @@
-# Snake Game
+# Snake
 
 ## Development
 
@@ -8,4 +8,4 @@
 
 ## Usage
 
-1. `npx @alb-xh/snake-game` (node >= 20)
+1. `npx @alb-xh/snake` (node >= 20)
