@@ -13,6 +13,7 @@ export enum Event {
   Reset = 'reset',
   Lose = 'lose',
   UpdateFrameData = 'update_frame_data',
+  UpdateScore = 'update_score',
 };
 
 export enum Direction {
