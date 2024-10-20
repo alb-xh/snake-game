@@ -47,17 +47,25 @@ export default  class Snake {
 
     const [ newRow, newCol ] = this.field.resolvePosition([ hRow, hCol ]);
 
+    // Crashed on field
     if (!this.field.isAllowed([ newRow, newCol ])) {
       return false;
     }
 
-    this.position.unshift([ newRow, newCol ]);
+    const capturedFruit = this.fruit.row === newRow && this.fruit.col === newCol;
 
-    if (this.fruit.row !== newRow || this.fruit.col !== newCol) this.position.pop();
-    else {
+    for (let [ row, col ] of this.position.slice(0, !capturedFruit ?  -1 : undefined)) {
+      if (newRow === row && newCol === col) return false;
+    }
+
+    if (capturedFruit) {
       this.fruits++;
       if (!this.moveFruit()) return false;
+    } else {
+      this.position.pop();
     }
+
+    this.position.unshift([ newRow, newCol ]);
 
     return true;
   }

@@ -1,10 +1,12 @@
 import _ from 'lodash';
 import { EventEmitter } from 'node:events';
+import { exit } from 'node:process';
 
 import { sleep } from '../utils.js';
 import { Event, Field, Status, Theme, Direction } from './types.js';
 import { Snake, Fruit, Frame, Keyboard } from './components/index.js';
 import { directionTransitionsMap } from './constants.js';
+
 
 export default class Engine extends EventEmitter {
   private status: Status;
@@ -88,8 +90,7 @@ export default class Engine extends EventEmitter {
       if (!success) {
         this.emit(Event.Lose);
         this.emit(Event.Reset);
-
-        return;
+        exit();
       }
 
       this.emit(Event.UpdateFrameData, this.frame.draw(this.theme));
