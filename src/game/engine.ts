@@ -45,7 +45,9 @@ export default class Engine extends EventEmitter {
       this.once(Event.Start, this.onStart.bind(this));
     });
 
+    this.emit(Event.UpdateScore, this.score);
     this.emit(Event.UpdateFrameData, this.frame.draw(this.theme));
+
     await sleep(1000);
 
     this.run();
@@ -75,10 +77,24 @@ export default class Engine extends EventEmitter {
     this.status = Status.Running;
 
     while (this.status === Status.Running) {
-      this.snake.move();
+      const success = this.snake.move();
+      const newScore = this.snake.fruits * this.fruit.points;
+
+      if (this.score !== newScore) {
+        this.score = newScore;
+        this.emit(Event.UpdateScore, this.score);
+      }
+
+      if (!success) {
+        this.emit(Event.Lose);
+        this.emit(Event.Reset);
+
+        return;
+      }
+
       this.emit(Event.UpdateFrameData, this.frame.draw(this.theme));
 
-      await sleep(Math.max(10, 50 - Math.floor(this.score / 100)));
+      await sleep(Math.max(1, 30 - Math.floor(this.score / 10)));
     }
   }
 }

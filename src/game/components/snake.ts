@@ -3,20 +3,18 @@ import _ from 'lodash';
 import { Direction, Field } from "../types.js";
 import { fieldToSnakeSizeMap } from '../constants.js';
 import Fruit from "./fruit.js";
-import { debug } from '../../utils.js';
 
 export default  class Snake {
   public readonly position: [ number, number ][] = [];
   public direction = Direction.Left;
+  public fruits: number = 0;
 
   constructor (
     private readonly field: Field,
     private readonly fruit: Fruit,
   ) {
     const size = fieldToSnakeSizeMap.get(this.field);
-    if (!size) {
-      throw new Error('Initial snake size is not defined for the map');
-    }
+    if (!size) throw new Error('Initial snake size is not defined');
 
     const mRow = Math.floor(this.field.height / 2);
     const mCol = Math.floor(this.field.width / 2);
@@ -32,10 +30,7 @@ export default  class Snake {
 
     this.position.push([ mRow, endCol ]);
 
-    const success = this.moveFruit();
-    if (!success) {
-      throw new Error('Failed to initialize fruit');
-    }
+    if (!this.moveFruit())throw new Error('Failed to initialize fruit');
   };
 
   setDirection (direction: Direction) {
@@ -58,8 +53,11 @@ export default  class Snake {
 
     this.position.unshift([ newRow, newCol ]);
 
-    if (this.fruit.row === newRow && this.fruit.col === newCol) this.moveFruit();
-    else this.position.pop();
+    if (this.fruit.row !== newRow || this.fruit.col !== newCol) this.position.pop();
+    else {
+      this.fruits++;
+      if (!this.moveFruit()) return false;
+    }
 
     return true;
   }

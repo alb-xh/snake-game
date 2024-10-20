@@ -1,8 +1,8 @@
 import { Field } from "./types.js";
 
 export const classicField: Field = {
-  height: 30,
-  width: 120,
+  height: 20,
+  width: 80,
   isAllowed () { return true },   // No obstacles
   resolvePosition ([ row, col ]) {
     let newRow, newCol;
