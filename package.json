@@ -1,6 +1,6 @@
 {
   "name": "@alb-xh/snake",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "CLI tool for playing snake game",
   "bin": "dist/index.js",
   "main": "dist/index.js",
