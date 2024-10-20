@@ -1,8 +1,9 @@
 import _ from 'lodash';
 
 import { Direction, Field } from "../types.js";
-import Fruit from "./fruit.js";
 import { fieldToSnakeSizeMap } from '../constants.js';
+import Fruit from "./fruit.js";
+import { debug } from '../../utils.js';
 
 export default  class Snake {
   public readonly position: [ number, number ][] = [];
@@ -57,7 +58,7 @@ export default  class Snake {
 
     this.position.unshift([ newRow, newCol ]);
 
-    if (this.fruit.row === newRow && this.fruit.col === newRow) this.moveFruit();
+    if (this.fruit.row === newRow && this.fruit.col === newCol) this.moveFruit();
     else this.position.pop();
 
     return true;

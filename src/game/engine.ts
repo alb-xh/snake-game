@@ -7,13 +7,11 @@ import { Snake, Fruit, Frame, Keyboard } from './components/index.js';
 import { directionTransitionsMap } from './constants.js';
 
 export default class Engine extends EventEmitter {
-  private status = Status.Idle
-  private score = 0;
-
+  private status: Status;
+  private score: number;
   private fruit: Fruit;
   private snake: Snake;
   private frame: Frame;
-
 
   constructor (
     private readonly field: Field,
@@ -22,11 +20,11 @@ export default class Engine extends EventEmitter {
     super();
 
     this.score = 0;
+    this.status = Status.Idle;
     this.fruit = new Fruit();
     this.snake = new Snake(this.field, this.fruit);
     this.frame = new Frame(this.field, this.snake, this.fruit);
-
-    this.on(Event.Start, this.onStart.bind(this));
+    this.once(Event.Start, this.onStart.bind(this));
   }
 
   private async onStart () {
@@ -35,16 +33,16 @@ export default class Engine extends EventEmitter {
     const onDirection = Keyboard.onDirection(this.onDirection.bind(this));
     const onP = Keyboard.onKey({ name: 'p' }, this.onPKey.bind(this));
 
-    this.on(Event.Reset, () => {
-      this.status = Status.Idle;
-      this.score = 0;
-
+    this.once(Event.Reset, () => {
       Keyboard.offPress(onDirection);
       Keyboard.offPress(onP);
 
+      this.score = 0;
+      this.status = Status.Idle;
       this.fruit = new Fruit();
       this.snake = new Snake(this.field, this.fruit);
       this.frame = new Frame(this.field, this.snake, this.fruit);
+      this.once(Event.Start, this.onStart.bind(this));
     });
 
     this.emit(Event.UpdateFrameData, this.frame.draw(this.theme));
