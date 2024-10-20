@@ -8,8 +8,6 @@ export enum Status {
 
 export enum Event {
   Start = 'start',
-  Pause = 'pause',
-  Resume = 'resume',
   Reset = 'reset',
   Lose = 'lose',
   UpdateFrameData = 'update_frame_data',
@@ -42,5 +40,5 @@ export type Theme = {
 }
 
 
-export type Key =  { name: string, ctrl: boolean, shift: boolean };
+export type Key =  { name: string, ctrl?: boolean, shift?: boolean };
 export type Listener = (...args: any[]) => void;

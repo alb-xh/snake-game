@@ -20,7 +20,7 @@ export default function UI ({ engine }: { engine: Engine }) {
     return () => {
       engine.removeListener(Event.UpdateScore, setScore);
       engine.removeListener(Event.UpdateFrameData, setFrameData);
-      engine.emit('reset');
+      engine.emit(Event.Reset);
     }
   }, []);
 

@@ -23,9 +23,13 @@ export default class Keyboard {
     return listener;
   }
 
-  static onKey (key: Key, cb: () => {}): Listener {
-    return Keyboard.onPress((k) => {
-      if (_.isEqual(k, key)) cb();
+  static onKey (key: Key, cb: () => void): Listener {
+    return Keyboard.onPress((k: Key) => {
+      for (const prop in key) {
+        if (key[prop as keyof Key] !== k[prop as keyof Key]) return;
+      }
+
+      cb();
     })
   }
 
