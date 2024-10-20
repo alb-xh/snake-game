@@ -33,7 +33,7 @@ export default function UI ({ engine }: { engine: Engine }) {
   return (
     <Box alignItems='center' flexDirection='column'>
       <Gradient name='rainbow'>
-        <BigText text="Snake game"/>
+        <BigText text="Snake"/>
       </Gradient>
       { score !== null && <Score score={score} />}
       { frameData && <Frame data={frameData} />}

@@ -2,7 +2,7 @@ import { Direction } from './types.js';
 import { classicField } from "./fields.js";
 
 export const fieldToSnakeSizeMap = new Map()
-  .set(classicField, 25);
+  .set(classicField, 16);
 
 export const directionTransitionsMap: Record<Direction, Direction[]> = {
   [Direction.Up]: [ Direction.Right, Direction.Left ],

@@ -2,7 +2,7 @@ import { Field } from "./types.js";
 
 export const classicField: Field = {
   height: 20,
-  width: 80,
+  width: 60,
   isAllowed () { return true },   // No obstacles
   resolvePosition ([ row, col ]) {
     let newRow, newCol;

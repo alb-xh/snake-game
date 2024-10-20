@@ -7,7 +7,6 @@ import { Event, Field, Status, Theme, Direction } from './types.js';
 import { Snake, Fruit, Frame, Keyboard } from './components/index.js';
 import { directionTransitionsMap } from './constants.js';
 
-
 export default class Engine extends EventEmitter {
   private status: Status;
   private score: number;
@@ -97,7 +96,10 @@ export default class Engine extends EventEmitter {
 
       this.emit(Event.UpdateFrameData, this.frame.draw(this.theme));
 
-      await sleep(Math.max(1, 30 - Math.floor(this.score / 10)));
+      let timeout = Math.max(1, 30 - Math.floor(this.score / 10));
+      if ([ Direction.Up, Direction.Down].includes(this.snake.direction)) timeout *= (1 + this.field.height * 2 / this.field.width); //hacky
+
+      await sleep(timeout);
     }
   }
 }

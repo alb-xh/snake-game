@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { Direction, Field, FrameData, Theme } from "../types.js";
+import { Field, FrameData, Theme } from "../types.js";
 import Snake from './snake.js';
 import Fruit from './fruit.js';
 
