@@ -1,6 +1,6 @@
 import { Theme } from './types.js';
 
-export const classic: Theme = {
+export const classicTheme: Theme = {
   empty: { value: ' ', color: '', bgColor: '' },
   fruit: { value: '0', color: 'black', bgColor: 'yellow' },
   snake: {

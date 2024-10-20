@@ -1,24 +1,27 @@
 import _ from 'lodash';
 
-import { Direction } from "../types.js";
-import { BaseMap } from './maps/index.js'
+import { Direction, Field } from "../types.js";
 import Fruit from "./fruit.js";
+import { fieldToSnakeSizeMap } from '../constants.js';
 
 export default  class Snake {
   public readonly position: [ number, number ][] = [];
+  public direction = Direction.Left;
 
   constructor (
-    private readonly map: BaseMap,
+    private readonly field: Field,
     private readonly fruit: Fruit,
-    private readonly initialSize: number,
-  ) {};
+  ) {
+    const size = fieldToSnakeSizeMap.get(this.field);
+    if (!size) {
+      throw new Error('Initial snake size is not defined for the map');
+    }
 
-  initialize (): void {
-    const mRow = Math.floor(this.map.height / 2);
-    const mCol = Math.floor(this.map.width / 2);
+    const mRow = Math.floor(this.field.height / 2);
+    const mCol = Math.floor(this.field.width / 2);
 
-    const startCol = mCol - Math.floor(this.initialSize / 2);
-    const endCol = mCol + Math.ceil(this.initialSize / 2);
+    const startCol = mCol - Math.floor(size/ 2);
+    const endCol = mCol + Math.ceil(size / 2);
 
     this.position.push([ mRow, startCol ]);
 
@@ -32,19 +35,23 @@ export default  class Snake {
     if (!success) {
       throw new Error('Failed to initialize fruit');
     }
+  };
+
+  setDirection (direction: Direction) {
+    this.direction = direction;
   }
 
-  move (direction: Direction): boolean {
+  move (): boolean {
     let [ hRow, hCol ] = this.position[0];
 
-    if (direction === Direction.Up) hRow--;
-    else if (direction === Direction.Down) hRow++;
-    else if (direction === Direction.Left) hCol--;
+    if (this.direction === Direction.Up) hRow--;
+    else if (this.direction === Direction.Down) hRow++;
+    else if (this.direction === Direction.Left) hCol--;
     else hCol++;
 
-    const [ newRow, newCol ] = this.map.resolvePosition([ hRow, hCol ]);
+    const [ newRow, newCol ] = this.field.resolvePosition([ hRow, hCol ]);
 
-    if (!this.map.isAllowed([ newRow, newCol ])) {
+    if (!this.field.isAllowed([ newRow, newCol ])) {
       return false;
     }
 
@@ -56,15 +63,16 @@ export default  class Snake {
     return true;
   }
 
+
   private moveFruit (): boolean {
     const availablePositions = [];
     const snakePositions = new Set(this.position.map((arr) => arr.toString()))
 
-    for (let row = 0; row < this.map.height; row++) {
-      for (let col = 0; col < this.map.width; col++) {
-        const poz = this.map.resolvePosition([ row, col ]);
+    for (let row = 0; row < this.field.height; row++) {
+      for (let col = 0; col < this.field.width; col++) {
+        const poz = this.field.resolvePosition([ row, col ]);
 
-        if (this.map.isAllowed(poz) && !snakePositions.has(poz.toString())) {
+        if (this.field.isAllowed(poz) && !snakePositions.has(poz.toString())) {
           availablePositions.push(poz);
         }
       }
@@ -76,4 +84,5 @@ export default  class Snake {
 
     return true;
   }
+
 }

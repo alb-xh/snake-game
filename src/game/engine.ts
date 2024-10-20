@@ -1,85 +1,42 @@
 import _ from 'lodash';
 import { EventEmitter } from 'node:events';
-import { clearInterval } from 'node:timers';
 
-import Debugger from '../debugger.js';
-import { Settings, Direction, State, Event, Key } from './types.js';
-import { defaultSettings, intervalMap } from './configurations.js';
-import { FieldMap, Snake, Fruit, Frame, KeyPress } from './components/index.js';
-import { classic } from './themes.js';
-
-const debug = new Debugger('Engine');
+import { Event, Field, Status, Theme } from './types.js';
+import { Snake, Fruit, Frame, Keyboard } from './components/index.js';
+import { directionTransitionsMap, fieldToSnakeSizeMap } from './constants.js';
 
 export default class Engine extends EventEmitter {
-  private settings: Settings = defaultSettings;
-  private state: State | null = null;
-  private interval: NodeJS.Timeout | null = null;
+  private status = Status.Idle;
 
-  public start (settings: Partial<Settings> = {}) {
-    if (this.state) throw new Error('Not allowed');
+  constructor (
+    private readonly field: Field,
+    private readonly theme: Theme,
+  ) {
+    super();
 
-    Object.assign(this.settings, settings);
+    this.on(Event.Start, this.onStart.bind(this));
+    this.on(Event.Reset, this.onReset.bind(this));
+  }
+
+
+  private onStart () {
+    if (this.status !== Status.Idle) throw new Error('Not allowed');
 
     const fruit = new Fruit();
-    const map = new FieldMap(this.settings.height, this.settings.width);
-    const snake = new Snake(map, fruit, this.settings.snakeInitialSize);
-    const frame = new Frame(map, snake, fruit);
+    const snake = new Snake(this.field, fruit);
+    const frame = new Frame(this.field, snake, fruit);
 
-    snake.initialize();
-    KeyPress.on(this.onKeyPress.bind(this));
-    this.emit(Event.UpdateFrameData, frame.draw(classic, this.settings.direction));
+    const listener = Keyboard.onDirection((direction) => {
+      if (directionTransitionsMap[snake.direction].includes(direction)) {
+        snake.setDirection(direction);
+      }
+    });
 
-    this.interval = setInterval(() => {
-      snake.move(this.settings.direction);
-      this.emit(Event.UpdateFrameData, frame.draw(classic, this.settings.direction));
-    }, intervalMap[this.settings.difficulty]);
+    this.on(Event.Reset, () => Keyboard.offPress(listener));
+    this.emit(Event.UpdateFrameData, frame.draw(this.theme));
   }
 
-  public reset () {
-    KeyPress.off(this.onKeyPress.bind(this));
-
-    for (const event of Object.values(Event)) this.removeAllListeners(event);
-    if (this.interval) clearInterval(this.interval);
-
-    this.interval = null;
-    this.state = null;
-    this.settings = defaultSettings;
-  }
-
-  private onKeyPress (key: Key) {
-    switch (key.name) {
-      case Direction.Up: {
-        if ([ Direction.Left, Direction.Right ].includes(this.settings.direction)) {
-          this.settings.direction = Direction.Up;
-        }
-
-        return;
-      }
-
-      case Direction.Down: {
-        if ([ Direction.Left, Direction.Right ].includes(this.settings.direction)) {
-          this.settings.direction = Direction.Down;
-        }
-
-        return;
-      }
-
-      case Direction.Left: {
-        if ([ Direction.Up, Direction.Down ].includes(this.settings.direction)) {
-          this.settings.direction = Direction.Left;
-        }
-
-        return;
-      }
-
-      case Direction.Right: {
-        if ([ Direction.Up, Direction.Down ].includes(this.settings.direction)) {
-          this.settings.direction = Direction.Right;
-        }
-
-        return;
-      }
-    }
-
+  private onReset () {
+    this.status = Status.Idle;
   }
 }

@@ -1,42 +1,38 @@
 // Maybe rename most of them to more explicit
 
-export enum Difficulty {
-  Easy = 'easy',
-  Normal = 'normal',
-  Hard = 'hard'
-}
+export enum Status {
+  Idle = 'idle',
+  Paused = 'paused',
+  Running = 'running',
+};
 
-export enum MapType {
-  Field = 'field',
-  Fence = 'fence',
-  Maze = 'Maze',
-}
+export enum Event {
+  Start = 'start',
+  Pause = 'pause',
+  Resume = 'resume',
+  Reset = 'reset',
+  Lose = 'lose',
+  UpdateFrameData = 'update_frame_data',
+};
 
 export enum Direction {
   Up = 'up',
   Down = 'down',
   Left = 'left',
   Right = 'right',
+};
+
+export interface Field {
+  height: number;
+  width: number;
+
+  isAllowed (position: [ number, number ]): boolean;
+
+  resolvePosition (position: [ number, number ]): [ number, number ];
 }
 
-export enum Event {
-  UpdateFrameData = 'update_frame_data',
-  End = 'end',
-}
-
-export type Settings = {
-  difficulty: Difficulty,
-  map: MapType,
-  direction: Direction,
-  width: number,
-  height: number,
-  snakeInitialSize: number,
-}
-
-export type Coordinates = [ number, number ];
 export type FrameValue = { value: string, color: string, bgColor: string };
 export type FrameData = Array<Array<FrameValue>>;
-export type State = { frame: FrameData, ended: boolean };
 
 export type Theme = {
   empty: FrameValue,
@@ -44,4 +40,6 @@ export type Theme = {
   snake: Record<Direction, { head: FrameValue, body: FrameValue, tail: FrameValue }>,
 }
 
+
 export type Key =  { name: string, ctrl: boolean, shift: boolean };
+export type Listener = (...args: any[]) => void;

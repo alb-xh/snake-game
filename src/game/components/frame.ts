@@ -1,23 +1,21 @@
 import _ from 'lodash'
 
-import { Direction, FrameData, Theme } from "../types.js";
-import { BaseMap } from "./maps/index.js";
+import { Direction, Field, FrameData, Theme } from "../types.js";
 import Snake from './snake.js';
 import Fruit from './fruit.js';
 
 export default class Frame {
   constructor (
-    private readonly map: BaseMap,
+    private readonly field: Field,
     private readonly snake: Snake,
     private readonly fruit: Fruit,
   ) {}
 
-  draw (theme: Theme, direction: Direction): FrameData {
-    const data: FrameData = _.times(this.map.height, () => _.times(this.map.width, () => theme.empty));
+  draw (theme: Theme): FrameData {
+    const data: FrameData = _.times(this.field.height, () => _.times(this.field.width, () => theme.empty));
+    const snakeTheme = theme.snake[this.snake.direction];
 
     data[this.fruit.row][this.fruit.col] = theme.fruit;
-
-    const snakeTheme = theme.snake[direction];
 
     for (let i = 0; i < this.snake.position.length; i++) {
       const [ row, col ] = this.snake.position[i]

@@ -3,17 +3,21 @@ import Gradient from 'ink-gradient';
 import BigText from 'ink-big-text';
 import { Box } from 'ink';
 
-import { Difficulty, Event, FrameData, Engine } from '../game/index.js';
-import Selector from './Selector.js';
-import View from './View.js';
+import { Event, FrameData, Engine } from '../game/index.js';
+
+import Frame from './Frame.js';
 
 export default function UI ({ engine }: { engine: Engine }) {
-  const [ frame, setFrame ] = React.useState<FrameData | null>(null);
+  const [ frameData, setFrameData ] = React.useState<FrameData | null>(null);
 
   React.useEffect(() => {
-    engine.on(Event.UpdateFrameData, setFrame);
-    engine.start();
-    return () => engine.reset();
+    engine.on(Event.UpdateFrameData, setFrameData);
+    engine.emit(Event.Start);
+
+    return () => {
+      engine.removeListener(Event.UpdateFrameData, setFrameData);
+      engine.emit('reset');
+    }
   }, []);
 
   return (
@@ -21,11 +25,7 @@ export default function UI ({ engine }: { engine: Engine }) {
       <Gradient name='rainbow'>
         <BigText text="Snake game"/>
       </Gradient>
-      {
-        !frame
-          ? null
-          : <View frame={frame} />
-      }
+      {frameData && <Frame data={frameData} />}
     </Box>
   );
 }

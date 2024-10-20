@@ -4,11 +4,11 @@ import { Box, Text } from "ink";
 
 import type { FrameData } from "../game/index.js";
 
-export default function View ({ frame }: { frame: FrameData })  {
+export default function Frame ({ data }: { data: FrameData })  {
   return (
     <Box flexDirection="column" borderStyle='double'>
       {
-        frame.map((row, i) => (
+        data.map((row, i) => (
           <Box key={i}>
             {
               row.map((cell, j) => (

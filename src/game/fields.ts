@@ -1,12 +1,10 @@
-import BaseMap from "./base-map.js";
+import { Field } from "./types.js";
 
-export default class FieldMap extends BaseMap {
-  // No obstacles
-  isAllowed (poz: [ number, number ]) {
-    return true;
-  }
-
-  resolvePosition ([ row, col ]: [ number, number ]): [ number, number ] {
+export const classicField: Field = {
+  height: 30,
+  width: 120,
+  isAllowed () { return true },   // No obstacles
+  resolvePosition ([ row, col ]) {
     let newRow, newCol;
 
     if (row < 0) newRow = this.height + (row % this.height);
@@ -18,5 +16,6 @@ export default class FieldMap extends BaseMap {
     else newCol = col;
 
     return [ newRow, newCol ]
-  }
-}
+  },
+};
+

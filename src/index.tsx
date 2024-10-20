@@ -3,7 +3,8 @@
 import React from 'react';
 import { render } from 'ink';
 
-import { Engine } from './game/index.js';
+import { Engine, classicField, classicTheme } from './game/index.js';
 import UI from './ui/index.js';
 
-render(<UI engine={new Engine()} />);
+const engine = new Engine(classicField, classicTheme);
+render(<UI engine={engine} />);
