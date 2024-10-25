@@ -30,7 +30,7 @@ export default  class Snake {
 
     this.position.push([ mRow, endCol ]);
 
-    if (!this.moveFruit())throw new Error('Failed to initialize fruit');
+    if (!this.moveFruit()) throw new Error('Failed to initialize fruit');
   };
 
   setDirection (direction: Direction) {
@@ -52,17 +52,16 @@ export default  class Snake {
       return false;
     }
 
-    const capturedFruit = this.fruit.row === newRow && this.fruit.col === newCol;
-
-    for (let [ row, col ] of this.position.slice(0, !capturedFruit ?  -1 : undefined)) {
-      if (newRow === row && newCol === col) return false;
-    }
-
-    if (capturedFruit) {
+    if (this.fruit.row === newRow && this.fruit.col === newCol) {
       this.fruits++;
       if (!this.moveFruit()) return false;
     } else {
       this.position.pop();
+    }
+
+    // Eaten itself
+    for (let [ row, col ] of this.position) {
+      if (newRow === row && newCol === col) return false;
     }
 
     this.position.unshift([ newRow, newCol ]);

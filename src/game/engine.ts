@@ -97,7 +97,7 @@ export default class Engine extends EventEmitter {
       this.emit(Event.UpdateFrameData, this.frame.draw(this.theme));
 
       // hacky
-      const timeout = Math.max(1, 20 - Math.floor(this.score / 10)) *
+      const timeout = Math.max(1, 24 - Math.floor(this.score / 10)) *
         ([ Direction.Up, Direction.Down ].includes(this.snake.direction) ? 2 : 1)
 
       await sleep(timeout)
