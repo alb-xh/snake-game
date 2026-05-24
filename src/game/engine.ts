@@ -1,14 +1,11 @@
-import _ from 'lodash';
-import { EventEmitter } from 'node:events';
-import { exit } from 'node:process';
-
+import { EventEmitter } from 'node:events';;
 import { sleep } from '../utils.js';
 import { Event, Field, Status, Theme, Direction } from './types.js';
 import { Snake, Fruit, Frame, Keyboard } from './components/index.js';
 import { directionTransitionsMap } from './constants.js';
 
 export default class Engine extends EventEmitter {
-  private status: Status;
+  public status: Status;
   private score: number;
   private fruit: Fruit;
   private snake: Snake;
@@ -25,57 +22,20 @@ export default class Engine extends EventEmitter {
     this.fruit = new Fruit();
     this.snake = new Snake(this.field, this.fruit);
     this.frame = new Frame(this.field, this.snake, this.fruit);
-    this.once(Event.Start, this.onStart.bind(this));
+    this.setupBindings();
   }
 
-  private async onStart () {
-    if (this.status !== Status.Idle) throw new Error('Not allowed');
+  private async setupBindings () {
+    Keyboard.onDirection((direction) => {
+      if (this.status !== Status.Running) return;
 
-    const onDirection = Keyboard.onDirection(this.onDirection.bind(this));
-    const onP = Keyboard.onKey({ name: 'p' }, this.onPKey.bind(this));
-
-    this.once(Event.Reset, () => {
-      Keyboard.offPress(onDirection);
-      Keyboard.offPress(onP);
-
-      this.score = 0;
-      this.status = Status.Idle;
-      this.fruit = new Fruit();
-      this.snake = new Snake(this.field, this.fruit);
-      this.frame = new Frame(this.field, this.snake, this.fruit);
-      this.once(Event.Start, this.onStart.bind(this));
+      if (directionTransitionsMap[this.snake.direction].includes(direction)) {
+        this.snake.setDirection(direction);
+      }
     });
-
-    this.emit(Event.UpdateScore, this.score);
-    this.emit(Event.UpdateFrameData, this.frame.draw(this.theme));
-
-    await sleep(1000);
-
-    this.run();
   }
 
-  private onDirection (direction: Direction) {
-    if (this.status !== Status.Running) return;
-
-    if (directionTransitionsMap[this.snake.direction].includes(direction)) {
-      this.snake.setDirection(direction);
-    }
-  }
-
-  private onPKey (): void {
-    if (this.status === Status.Running) {
-      this.status = Status.Paused;
-      return;
-    }
-
-    if (this.status === Status.Paused) {
-      this.run();
-
-      return;
-    }
-  }
-
-  private async run (): Promise<void> {
+  private async run () {
     if (this.status === Status.Running) throw new Error('Not allowed');
     this.status = Status.Running;
 
@@ -89,9 +49,9 @@ export default class Engine extends EventEmitter {
       }
 
       if (!success) {
+        this.status = Status.Terminated;
         this.emit(Event.Lose);
-        this.emit(Event.Reset);
-        exit();
+        return;
       }
 
       this.emit(Event.UpdateFrameData, this.frame.draw(this.theme));
@@ -102,5 +62,30 @@ export default class Engine extends EventEmitter {
 
       await sleep(timeout)
     }
+  }
+
+  public async pause () {
+    if (this.status === Status.Running) this.status = Status.Paused;
+  }
+
+  public async resume () {
+    if (this.status === Status.Paused) this.run();
+  }
+
+  public async reset () {
+    this.score = 0;
+    this.fruit = new Fruit();
+    this.snake = new Snake(this.field, this.fruit);
+    this.frame = new Frame(this.field, this.snake, this.fruit);
+    this.status = Status.Idle;
+  }
+
+  public async start (): Promise<void> {
+    if (this.status !== Status.Idle) throw new Error('Not allowed');
+
+    this.emit(Event.UpdateScore, this.score);
+    this.emit(Event.UpdateFrameData, this.frame.draw(this.theme));
+
+    return this.run();
   }
 }

@@ -1,5 +1,3 @@
-import _ from 'lodash'
-
 import { Field, FrameData, Theme } from "../types.js";
 import Snake from './snake.js';
 import Fruit from './fruit.js';
@@ -12,7 +10,7 @@ export default class Frame {
   ) {}
 
   draw (theme: Theme): FrameData {
-    const data: FrameData = _.times(this.field.height, () => _.times(this.field.width, () => theme.empty));
+    const data: FrameData = [ ...Array(this.field.height) ].map(() => [ ...Array(this.field.width) ].map(() => theme.empty));
     const snakeTheme = theme.snake[this.snake.direction];
 
     data[this.fruit.row][this.fruit.col] = theme.fruit;

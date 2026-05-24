@@ -4,11 +4,10 @@ export enum Status {
   Idle = 'idle',
   Paused = 'paused',
   Running = 'running',
+  Terminated = 'terminated',
 };
 
 export enum Event {
-  Start = 'start',
-  Reset = 'reset',
   Lose = 'lose',
   UpdateFrameData = 'update_frame_data',
   UpdateScore = 'update_score',
@@ -20,6 +19,13 @@ export enum Direction {
   Left = 'left',
   Right = 'right',
 };
+
+export enum Page {
+  Help = 'help',
+  Game = 'game',
+  Edit = 'edit',
+  Leaderboard = 'leaderboard'
+}
 
 export interface Field {
   height: number;
@@ -39,6 +45,5 @@ export type Theme = {
   snake: Record<Direction, { head: FrameValue, body: FrameValue, tail: FrameValue }>,
 }
 
-
-export type Key =  { name: string, ctrl?: boolean, shift?: boolean };
+export type Key =  { name: string, ctrl?: boolean, shift?: boolean, sequence?: string };
 export type Listener = (...args: any[]) => void;

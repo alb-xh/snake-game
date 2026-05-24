@@ -11,3 +11,12 @@ export const debug = ((filePath: string) => (...logs: any[]) => {
   const formattedLogs = logs.map((log) => `${new Date().toISOString()}: ${JSON.stringify(log)}`);
   fs.writeFileSync(filePath, `${formattedLogs.join('\n')}\n`, { flag: 'a+' });
 })(path.resolve(import.meta.dirname, '../debug.log'));
+
+export const safe = <T>(cb: () => T): [ unknown, null] | [ null, T ] => {
+  try {
+    return [ null, cb() ]
+  } catch (e) {
+    debug(e);
+    return [ e, null ];
+  }
+};

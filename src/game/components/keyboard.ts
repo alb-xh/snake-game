@@ -1,8 +1,5 @@
-import _ from 'lodash';
-
 import readline from 'node:readline';
 import process from 'node:process';
-
 import { Direction, Key, Listener } from '../types.js';
 
 export default class Keyboard {

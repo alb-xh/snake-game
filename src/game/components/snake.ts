@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import { Direction, Field } from "../types.js";
 import { fieldToSnakeSizeMap } from '../constants.js';
 import Fruit from "./fruit.js";
@@ -69,7 +67,6 @@ export default  class Snake {
     return true;
   }
 
-
   private moveFruit (): boolean {
     const availablePositions = [];
     const snakePositions = new Set(this.position.map((arr) => arr.toString()))
@@ -86,7 +83,7 @@ export default  class Snake {
 
     if (availablePositions.length === 0) return false;
 
-    this.fruit.move(availablePositions[_.random(availablePositions.length - 1)]);
+    this.fruit.move(availablePositions[Math.floor(Math.random() * availablePositions.length)]);
 
     return true;
   }

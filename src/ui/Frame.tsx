@@ -1,5 +1,4 @@
 import React from "react";
-import _ from 'lodash';
 import { Box, Text } from "ink";
 
 import type { FrameData } from "../game/index.js";
